@@ -23,4 +23,12 @@ resource "digitalocean_droplet" "droplet" {
     size = "${lookup(var.general, "size")}"
 
     ssh_keys = ["${digitalocean_ssh_key.ssh.fingerprint}"]
+
+    provisioner "remote-exec" {
+        connection {
+            type = "ssh"
+            user = "root"
+            private_key = "${file(lookup(var.ssh, "private"))}"
+        }
+    }
 }
