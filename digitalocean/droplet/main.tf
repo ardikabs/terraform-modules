@@ -5,15 +5,11 @@ locals {
     env = "${lookup(var.general, "env","test")}"
 }
 
-
-resource "digitalocean_ssh_key" "ssh" {
-    name = "${lookup(var.ssh, "name", "tf-do-modules")}"
-    public_key = "${file(lookup(var.ssh, "public"))}"
+data "digitalocean_ssh_key" "default" {
+    name = "${lookup(var.ssh, "name")}"
 }
 
-
 resource "digitalocean_droplet" "droplet" {
-    depends_on = ["digitalocean_ssh_key.ssh"]
     
     count = "${lookup(var.general, "count")}"
     name = "${local.prefix}-${local.app}-${local.env}-${count.index+1}"
@@ -22,7 +18,9 @@ resource "digitalocean_droplet" "droplet" {
     region = "${lookup(var.general, "region")}"
     size = "${lookup(var.general, "size")}"
 
-    ssh_keys = ["${digitalocean_ssh_key.ssh.fingerprint}"]
+    private_networking = "${var.enable_private}"
+
+    ssh_keys = ["${data.digitalocean_ssh_key.default.fingerprint}"]
 
     provisioner "remote-exec" {
         connection {
