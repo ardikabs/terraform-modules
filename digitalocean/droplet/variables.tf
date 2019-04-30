@@ -15,7 +15,6 @@ variable "general" {
     }
 }
 
-
 variable "token" {
     type = "string"
     description = "DigitalOcean API Token"
@@ -33,4 +32,9 @@ variable "ssh" {
         public = ""
         private = ""
     }
+}
+
+variable "enable_private" {
+    description = "Enable private networking"
+    default = false
 }

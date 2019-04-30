@@ -18,7 +18,7 @@ resource "digitalocean_droplet" "droplet" {
     region = "${lookup(var.general, "region")}"
     size = "${lookup(var.general, "size")}"
 
-    private_networking = true
+    private_networking = "${var.enable_private}"
 
     ssh_keys = ["${data.digitalocean_ssh_key.default.fingerprint}"]
 
